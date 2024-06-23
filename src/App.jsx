@@ -1,13 +1,38 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import AddUserForm from './components/AddUserForm';
 import UserTable from './components/UserTable';
+function addToLocalStorage(newUsers) {
+  localStorage.setItem('users', JSON.stringify(newUsers));
+}
 
-function App() {
+export default function App() {
   const [users, setUsers] = useState([]);
 
   const handleAddUser = (createdUser) => {
-    setUsers((current) => [...current, createdUser]);
+    const newUsers = [...users, createdUser];
+
+    setUsers(newUsers);
+
+    addToLocalStorage(newUsers);
   };
+
+  const handleDeleteUser = (id) => {
+    const filteredUsers = users.filter((item) => item.id !== id);
+
+    setUsers(filteredUsers);
+
+    addToLocalStorage(filteredUsers);
+  };
+
+  useEffect(() => {
+    const users = JSON.parse(localStorage.getItem('users'));
+
+    if (!users?.length) {
+      return;
+    }
+
+    setUsers(users);
+  }, []);
 
   return (
     <>
@@ -15,9 +40,7 @@ function App() {
 
       <AddUserForm onAddUser={handleAddUser} />
 
-      <UserTable users={users} />
+      <UserTable users={users} onDelete={handleDeleteUser} />
     </>
   );
 }
-
-export default App;

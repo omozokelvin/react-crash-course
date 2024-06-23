@@ -1,3 +1,5 @@
+import UserTableRow from './UserTableRow';
+
 /* eslint-disable react/prop-types */
 export default function UserTable(props) {
   return (
@@ -7,16 +9,13 @@ export default function UserTable(props) {
           <th>First Name</th>
           <th>Last Name</th>
           <th>Mobile Number</th>
+          <th>Action</th>
         </tr>
       </thead>
 
       <tbody>
         {props.users.map((item) => (
-          <tr key={item.id}>
-            <td>{item.firstName}</td>
-            <td>{item.lastName}</td>
-            <td>{item.mobileNumber}</td>
-          </tr>
+          <UserTableRow key={item.id} {...item} onDelete={props.onDelete} />
         ))}
       </tbody>
     </table>
